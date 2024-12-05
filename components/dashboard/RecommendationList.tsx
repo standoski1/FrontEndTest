@@ -41,7 +41,7 @@ export function RecommendationList({
     );
   }
 
-  if (!recommendations.length) {
+  if (!recommendations?.length) {
     return (
       <div className="text-center py-12">
         <p className="text-gray-500">No recommendations found</p>
@@ -51,11 +51,11 @@ export function RecommendationList({
 
   return (
     <div className="space-y-4">
-      {recommendations.map((recommendation) => (
+      {recommendations?.map((recommendation) => (
         <RecommendationCard 
-          key={recommendation.recommendationId} 
+          key={recommendation?.recommendationId} 
           recommendation={recommendation}
-          onToggleArchive={() => onToggleArchive(recommendation.recommendationId, recommendation.archived)}
+          onToggleArchive={() => onToggleArchive(recommendation?.recommendationId, recommendation?.archived)}
         />
       ))}
       {hasNextPage && (

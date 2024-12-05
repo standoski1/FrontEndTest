@@ -33,7 +33,7 @@ const DashboardPage = () => {
         tags: selectedTags,
       }),
     initialPageParam: null as string | null,
-    getNextPageParam: (lastPage) => lastPage.pagination.cursor.next,
+    getNextPageParam: (lastPage:any) => lastPage?.pagination?.cursor?.next,
   });
 
   const toggleArchiveMutation = useMutation({
@@ -75,7 +75,7 @@ const DashboardPage = () => {
           <SearchBar value={search} onChange={setSearch} className="mb-6" />
           
           <RecommendationList
-            recommendations={data?.pages.flatMap((page) => page.data) ?? []}
+            recommendations={data?.pages?.flatMap((page:any) => page.data) ?? []}
             isLoading={isLoading}
             isFetchingNextPage={isFetchingNextPage}
             hasNextPage={!!hasNextPage}
