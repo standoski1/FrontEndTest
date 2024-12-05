@@ -53,3 +53,4 @@ export async function toggleArchiveStatus(
   const endpoint = `/recommendations/${recommendationId}/${archive ? 'archive' : 'unarchive'}`;
   return fetchWithAuth(endpoint, { method: 'POST' });
 }
+

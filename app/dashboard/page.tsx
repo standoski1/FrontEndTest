@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { getRecommendations } from '@/lib/api';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getRecommendations, toggleArchiveStatus } from '@/lib/api';
 import { RecommendationList } from '@/components/dashboard/RecommendationList';
 import { SearchBar } from '@/components/dashboard/SearchBar';
 import { FilterPanel } from '@/components/dashboard/FilterPanel';
@@ -15,6 +15,7 @@ const DashboardPage = () => {
   const [search, setSearch] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isArchiveView, setIsArchiveView] = useState(false);
+  const queryClient = useQueryClient();
 
   const {
     data,
@@ -26,14 +27,25 @@ const DashboardPage = () => {
     queryKey: ['recommendations', search, selectedTags, isArchiveView],
     queryFn: ({ pageParam }) =>
       getRecommendations({
-        cursor: pageParam as string | null,
+        cursor: pageParam as string | undefined,
         limit: 10,
         search,
         tags: selectedTags,
-        isArchived: isArchiveView,
       }),
     getNextPageParam: (lastPage) => lastPage.pagination.cursor.next,
   });
+
+  const toggleArchiveMutation = useMutation({
+    mutationFn: ({ id, archive }: { id: string; archive: boolean }) =>
+      toggleArchiveStatus(id, archive),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['recommendations']);
+    },
+  });
+
+  const handleToggleArchive = (id: string, currentStatus: boolean) => {
+    toggleArchiveMutation.mutate({ id, archive: !currentStatus });
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -67,6 +79,7 @@ const DashboardPage = () => {
             isFetchingNextPage={isFetchingNextPage}
             hasNextPage={!!hasNextPage}
             onLoadMore={() => fetchNextPage()}
+            onToggleArchive={handleToggleArchive}
           />
         </div>
       </div>
