@@ -32,6 +32,7 @@ const DashboardPage = () => {
         search,
         tags: selectedTags,
       }),
+    initialPageParam: null as string | null,
     getNextPageParam: (lastPage) => lastPage.pagination.cursor.next,
   });
 
