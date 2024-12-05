@@ -23,7 +23,7 @@ const DashboardPage = ()=> {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ['recommendations', search, selectedTags, isArchiveView],
-    queryFn: ({ pageParam }:{pageParam:any}) =>
+    queryFn: ({ pageParam }) =>
       getRecommendations({
         cursor: pageParam,
         limit: 10,
