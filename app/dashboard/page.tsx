@@ -9,8 +9,9 @@ import { FilterPanel } from '@/components/dashboard/FilterPanel';
 import { Button } from '@/components/ui/button';
 import { Archive } from 'lucide-react';
 import withAuth from '../WithAuth';
+import { Recommendation, PaginatedResponse } from '@/types';
 
-const DashboardPage = ()=> {
+const DashboardPage = () => {
   const [search, setSearch] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isArchiveView, setIsArchiveView] = useState(false);
@@ -21,16 +22,17 @@ const DashboardPage = ()=> {
     hasNextPage,
     isLoading,
     isFetchingNextPage,
-  } = useInfiniteQuery({
+  } = useInfiniteQuery<PaginatedResponse<Recommendation>, Error>({
     queryKey: ['recommendations', search, selectedTags, isArchiveView],
     queryFn: ({ pageParam }) =>
       getRecommendations({
-        cursor: pageParam,
+        cursor: pageParam as string | null,
         limit: 10,
         search,
         tags: selectedTags,
+        isArchived: isArchiveView,
       }),
-    getNextPageParam: (lastPage:any) => lastPage?.pagination?.cursor?.next,
+    getNextPageParam: (lastPage) => lastPage.pagination.cursor.next,
   });
 
   return (
@@ -60,15 +62,17 @@ const DashboardPage = ()=> {
           <SearchBar value={search} onChange={setSearch} className="mb-6" />
           
           <RecommendationList
-            recommendations={data?.pages?.flatMap((page:any) => page.data) ?? []}
+            recommendations={data?.pages.flatMap((page) => page.data) ?? []}
             isLoading={isLoading}
             isFetchingNextPage={isFetchingNextPage}
-            hasNextPage={hasNextPage}
-            onLoadMore={fetchNextPage}
+            hasNextPage={!!hasNextPage}
+            onLoadMore={() => fetchNextPage()}
           />
         </div>
       </div>
     </div>
   );
 }
-export default withAuth(DashboardPage)
+
+export default withAuth(DashboardPage);
+
