@@ -9,7 +9,7 @@ import { FilterPanel } from '@/components/dashboard/FilterPanel';
 import { Button } from '@/components/ui/button';
 import { Archive } from 'lucide-react';
 import withAuth from '../WithAuth';
-import { Recommendation, PaginatedResponse } from '@/types';
+// import { Recommendation, PaginatedResponse } from '@/types';
 
 const DashboardPage = () => {
   const [search, setSearch] = useState('');
@@ -23,7 +23,7 @@ const DashboardPage = () => {
     hasNextPage,
     isLoading,
     isFetchingNextPage,
-  } = useInfiniteQuery<PaginatedResponse<Recommendation>, Error>({
+  } = useInfiniteQuery({
     queryKey: ['recommendations', search, selectedTags, isArchiveView],
     queryFn: ({ pageParam }) =>
       getRecommendations({
@@ -40,7 +40,7 @@ const DashboardPage = () => {
     mutationFn: ({ id, archive }: { id: string; archive: boolean }) =>
       toggleArchiveStatus(id, archive),
     onSuccess: () => {
-      queryClient.invalidateQueries(['recommendations']);
+      queryClient.invalidateQueries({ queryKey: ['recommendations'] });
     },
   });
 
