@@ -174,7 +174,7 @@ const DashboardPage = () => {
                     <CardTitle>Security Overview</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p>Overview content goes here...</p>
+                    <p>Overview content.</p>
                   </CardContent>
                 </Card>
               </TabsContent>
