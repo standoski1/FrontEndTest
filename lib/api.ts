@@ -1,6 +1,6 @@
 import { Recommendation, PaginatedResponse, AuthResponse } from '@/types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://aronserver-2.onrender.com';
+const API_URL = 'https://aronserver-2.onrender.com';
 
 async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
   const token = localStorage.getItem('auth_token');
