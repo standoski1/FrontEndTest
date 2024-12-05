@@ -49,10 +49,8 @@ export function RecommendationList({
 
   return (
     <div className="space-y-4">
-      {recommendations?.map((recommendation) => (
-        <div className='' key={recommendation?.recommendationId}>
-          <RecommendationCard recommendation={recommendation} />
-        </div>
+      {recommendations.map((recommendation) => (
+        <RecommendationCard key={recommendation.recommendationId} recommendation={recommendation} />
       ))}
       {hasNextPage && (
         <div ref={ref} className="py-4">
@@ -64,3 +62,4 @@ export function RecommendationList({
     </div>
   );
 }
+
