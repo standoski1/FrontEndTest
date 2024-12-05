@@ -12,6 +12,7 @@ interface RecommendationListProps {
   isFetchingNextPage: boolean;
   hasNextPage?: boolean;
   onLoadMore: () => void;
+  onToggleArchive: (id: string, currentStatus: boolean) => void;
 }
 
 export function RecommendationList({
@@ -20,6 +21,7 @@ export function RecommendationList({
   isFetchingNextPage,
   hasNextPage,
   onLoadMore,
+  onToggleArchive,
 }: RecommendationListProps) {
   const { ref, inView } = useInView();
 
@@ -50,7 +52,11 @@ export function RecommendationList({
   return (
     <div className="space-y-4">
       {recommendations.map((recommendation) => (
-        <RecommendationCard key={recommendation.recommendationId} recommendation={recommendation} />
+        <RecommendationCard 
+          key={recommendation.recommendationId} 
+          recommendation={recommendation}
+          onToggleArchive={() => onToggleArchive(recommendation.recommendationId, recommendation.archived)}
+        />
       ))}
       {hasNextPage && (
         <div ref={ref} className="py-4">

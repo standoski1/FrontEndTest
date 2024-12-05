@@ -5,35 +5,23 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Archive, ArchiveRestore } from 'lucide-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toggleArchiveStatus } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 
 interface RecommendationCardProps {
   recommendation: Recommendation;
+  onToggleArchive: () => void;
 }
 
-export function RecommendationCard({ recommendation }: RecommendationCardProps) {
-  const queryClient = useQueryClient();
+export function RecommendationCard({ recommendation, onToggleArchive }: RecommendationCardProps) {
   const { toast } = useToast();
 
-  const { mutate: toggleArchive } = useMutation({
-    mutationFn: () => toggleArchiveStatus(recommendation.recommendationId, !recommendation.archived),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['recommendations'] });
-      toast({
-        title: recommendation.archived ? 'Recommendation unarchived' : 'Recommendation archived',
-        description: 'The recommendation has been updated successfully.',
-      });
-    },
-    onError: () => {
-      toast({
-        title: 'Error',
-        description: 'Failed to update recommendation status.',
-        variant: 'destructive',
-      });
-    },
-  });
+  const handleToggleArchive = () => {
+    onToggleArchive();
+    toast({
+      title: recommendation.archived ? 'Recommendation unarchived' : 'Recommendation archived',
+      description: 'The recommendation has been updated successfully.',
+    });
+  };
 
   return (
     <Card>
@@ -42,7 +30,7 @@ export function RecommendationCard({ recommendation }: RecommendationCardProps) 
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => toggleArchive()}
+          onClick={handleToggleArchive}
           className="h-8 w-8"
         >
           {recommendation.archived ? (
